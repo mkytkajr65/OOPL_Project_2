@@ -7,6 +7,7 @@ import org.apache.http.client.utils._
 import org.apache.http.message._
 import org.apache.http.params._
 import java.net.URL
+import scala.collection.mutable.ArrayBuffer
 import collection.breakOut
 object SearchEngine extends App {
 // body of our App is like main
@@ -68,8 +69,6 @@ object SearchEngine extends App {
 
 	def crawlAndIndex(url: String, maxPages: Int) : List[PageSummary] = {
 		//if there are pages left get all the page summaries for the urls on the page
-		//maxP.counter += 1
-		//println(maxP.counter)
 		counter += 1
 		if(maxPages>=counter){
 			println(counter)
@@ -102,8 +101,18 @@ object SearchEngine extends App {
 	val searchList = List("plaza","shopping","shop","jacksonville","the","div")
 
 	var u = "http://www.jacksonvilleplaza.com/"
-	var results = crawlAndIndex(u,50)
+	/*var results = crawlAndIndex(u,50)
 
-	printBest(searchList,results)
+	printBest(searchList,results)*/
+
+	val ps = new PageSummary(u,searchList)
+
+	val aPage = new Page(ps)
+
+	var pages = ArrayBuffer[Page](aPage)
+
+	var ip = new WeightedIndexedPages(pages)
+
+	println(ip.numContaining("shop"))
 
 }

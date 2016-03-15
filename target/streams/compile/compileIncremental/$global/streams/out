@@ -16,7 +16,7 @@
 [0m[[0minfo[0m] [0mCompiling 1 Scala source to /Users/mkytkajr65/Documents/starter/target/scala-2.10/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.5[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.5[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler 30ce6561, interfacing (CompilerInterface) with Scala compiler version 2.10.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 11316f4e, interfacing (CompilerInterface) with Scala compiler version 2.10.5[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-deprecation[0m
 [0m[[0mdebug[0m] [0m	-unchecked[0m
@@ -25,7 +25,7 @@
 [0m[[0mdebug[0m] [0m	/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/classes:/Users/mkytkajr65/.sbt/boot/scala-2.10.5/lib/scala-library.jar[0m
 [0m[[0mdebug[0m] [0m	-classpath[0m
 [0m[[0mdebug[0m] [0m	/Users/mkytkajr65/Documents/starter/target/scala-2.10/classes:/Users/mkytkajr65/.ivy2/cache/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar:/Users/mkytkajr65/.ivy2/cache/org.apache.httpcomponents/httpclient/jars/httpclient-4.1.2.jar:/Users/mkytkajr65/.ivy2/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.1.2.jar:/Users/mkytkajr65/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.4.jar[0m
-[0m[[0mdebug[0m] [0mScala compilation took 3.196049913 s[0m
+[0m[[0mdebug[0m] [0mScala compilation took 3.092208498 s[0m
 [0m[[0mdebug[0m] [0mNew invalidations:[0m
 [0m[[0mdebug[0m] [0m	Set()[0m
 [0m[[0mdebug[0m] [0mInitial set of included nodes: Set()[0m
