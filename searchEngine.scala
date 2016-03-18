@@ -9,6 +9,7 @@ import org.apache.http.params._
 import java.net.URL
 import scala.collection.mutable.ArrayBuffer
 import collection.breakOut
+import collection.mutable
 object SearchEngine extends App {
 // body of our App is like main
 
@@ -67,52 +68,103 @@ object SearchEngine extends App {
 
 	var counter = 0
 
-	def crawlAndIndex(url: String, maxPages: Int) : List[PageSummary] = {
+	def getAllPages(linksOnPage: List[String], html: String, maxPages: Int, prevUrls : ArrayBuffer[String], url: String) : ArrayBuffer[Page] = {
+				var pageList = ArrayBuffer[Page]()
+
+				//iterate over all the links and recursively crawl those links
+				for(link  <- linksOnPage) {
+				 	pageList ++= crawlAndIndex(link, maxPages, prevUrls)
+				}
+				//get all the terms who have a length greater than 1
+				var keyTerms = getTerms(html, { (x:String) => (x.length>1)})
+				//get the page summary of the current page
+				var pageSummary = new PageSummary(url, keyTerms)
+				//create new page
+				var page = new Page(pageSummary)
+				//append the pageSummary of the current page to the pageSummaryList
+
+				var allPages = pageList += page
+
+				return allPages
+	}
+
+	def crawlAndIndex(url: String, maxPages: Int, prevUrls : ArrayBuffer[String] = ArrayBuffer(), mode: String = "read"
+		, weight: Boolean = true): IndexedPages = {
 		//if there are pages left get all the page summaries for the urls on the page
 		counter += 1
 		if(maxPages>=counter){
-			println(counter)
-			println("url: " + url + " maxpages: " + maxPages)
+			//println(counter)
+			//println("url: " + url + " counter: " + counter)
 			//fetch html
 			var html = fetch(url) 
 			//grab all the links on the page
 			var linksOnPage = getLinks(html,url)
 			//make sure their are no repeats
-			linksOnPage = linksOnPage.distinct
-			var pageSummaryList : List[PageSummary] = Nil
-			//iterate over all the links and recursively crawl those links
-			for(link  <- linksOnPage) {
-			 	pageSummaryList :::= crawlAndIndex(link, maxPages)  
-			}
-			//get all the terms who have a length greater than 1
-			var keyTerms = getTerms(html, { (x:String) => (x.length>1)})
-			//get the page summary of the current page
-			var pageSummary = new PageSummary(url, keyTerms)
-			//append the pageSummary of the current page to the pageSummaryList
-			var allPages = pageSummaryList :+ pageSummary
-			//make sure no duplicate pages summaries
-			allPages = allPages.groupBy(_.url).map(_._2.head)(breakOut)
+			prevUrls += url
+			linksOnPage = linksOnPage.distinct.filter({ !prevUrls.contains(_) })
+			//println(linksOnPage + " counter: " + counter)
+			if(weight == true){
+	
+				var allPages = getAllPages(linksOnPage, html, maxPages, prevUrls, url)
+			
+				if(mode == "augmented"){
+					var weightedAugmentedIndexPSL = new WeightedIndexedPages(allPages) with Augmentable[Page]
+					return weightedAugmentedIndexPSL
+				}
+				var weightedIndexPSL = new WeightedIndexedPages(allPages)
+				return weightedIndexPSL
 
-			return allPages
+				}else{
+					
+					var allPages = getAllPages(linksOnPage, html, maxPages, prevUrls, url)
+
+					if(mode == "augmented"){
+						var indexedAugmentedIndexPSL = new IndexedPages(allPages) with Augmentable[Page]
+						return indexedAugmentedIndexPSL
+					}
+					var indexedPages = new IndexedPages(allPages)
+
+					return indexedPages
+				}
 		}
-		return List[PageSummary]()
+		var emptyPageList = ArrayBuffer[Page]()
+		var returnEmptyPageList = new IndexedPages(emptyPageList)
+		return returnEmptyPageList
 	}
 
-	val searchList = List("plaza","shopping","shop","jacksonville","the","div")
+	/*val searchList = List("plaza","shopping","shop","jacksonville","the","div")*/
 
 	var u = "http://www.jacksonvilleplaza.com/"
 	/*var results = crawlAndIndex(u,50)
 
 	printBest(searchList,results)*/
 
-	val ps = new PageSummary(u,searchList)
+	/*val ps = new PageSummary(u,searchList)
 
 	val aPage = new Page(ps)
 
-	var pages = ArrayBuffer[Page](aPage)
+	var pages = ArrayBuffer[Page](aPage)*/
 
-	var ip = new WeightedIndexedPages(pages)
+	//var results = crawlAndIndex(u,3)
 
-	println(ip.numContaining("shop"))
+	//println(results.map({ _.pageSummary.url }))
 
+	/*var t = ArrayBuffer("Jacksonville")
+
+    var query = new Query(t)
+
+	var searchResults = new SearchResults(query, crawlAndIndex(u, 4))
+
+	print(searchResults.results)
+	searchResults.printTop(2)*/
+
+	val pages = SearchEngine.crawlAndIndex("http://www.cnn.com", 50, weight=false)
+
+	val q = new WeightedQuery(List("computer", "security", "tech"))
+
+	pages.search(q).printTop(10)
+
+	val q2 = new Query(Vector("winter","storm"))
+
+	pages.search(q2).printTop(5)
 }
