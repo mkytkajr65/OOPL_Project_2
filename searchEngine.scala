@@ -68,7 +68,7 @@ object SearchEngine extends App {
 
 	var counter = 0
 
-	def getAllPages(linksOnPage: List[String], html: String, maxPages: Int, prevUrls : ArrayBuffer[String], url: String) : ArrayBuffer[Page] = {
+	def getAllPages(linksOnPage: Set[String], html: String, maxPages: Int, prevUrls : scala.collection.mutable.Set[String], url: String) : ArrayBuffer[Page] = {
 				var pageList = ArrayBuffer[Page]()
 
 				//iterate over all the links and recursively crawl those links
@@ -88,7 +88,7 @@ object SearchEngine extends App {
 				return allPages
 	}
 
-	def crawlAndIndex(url: String, maxPages: Int, prevUrls : ArrayBuffer[String] = ArrayBuffer(), mode: String = "read"
+	def crawlAndIndex(url: String, maxPages: Int, prevUrls : scala.collection.mutable.Set[String] = scala.collection.mutable.Set(), mode: String = "read"
 		, weight: Boolean = true): IndexedPages = {
 		//if there are pages left get all the page summaries for the urls on the page
 		counter += 1
@@ -98,10 +98,11 @@ object SearchEngine extends App {
 			//fetch html
 			var html = fetch(url) 
 			//grab all the links on the page
-			var linksOnPage = getLinks(html,url)
+			var linksOnPage = getLinks(html,url).toSet
 			//make sure their are no repeats
 			prevUrls += url
-			linksOnPage = linksOnPage.distinct.filter({ !prevUrls.contains(_) })
+			
+			 //.filter({ !prevUrls.contains(_) })
 			//println(linksOnPage + " counter: " + counter)
 			if(weight == true){
 	
@@ -158,13 +159,13 @@ object SearchEngine extends App {
 	print(searchResults.results)
 	searchResults.printTop(2)*/
 
-	val pages = SearchEngine.crawlAndIndex("http://www.cnn.com", 50, weight=false)
+	val pages = SearchEngine.crawlAndIndex("http://www.hotnewhiphop.com/", 100, weight=false)
 
-	val q = new WeightedQuery(List("computer", "security", "tech"))
+	//val q = new WeightedQuery(List("computer", "security", "tech"))
 
-	pages.search(q).printTop(10)
+	//pages.search(q).printTop(10)
 
-	val q2 = new Query(Vector("winter","storm"))
+	//val q2 = new Query(Vector("winter","storm"))
 
-	pages.search(q2).printTop(5)
+	//pages.search(q2).printTop(5)
 }
